@@ -1,8 +1,4 @@
-import React, {Component} from 'react';
-import ChatBar from './ChatBar.jsx';
-import Message from './Message.jsx';
-
-const data = [
+[
   {
     type: 'incomingMessage',
     content: 'I wont be impressed with technology until I can download food.',
@@ -37,25 +33,3 @@ const data = [
     content: 'Anonymous2 changed their name to NotFunny',
   },
 ]
-
-class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      data,
-      currentUser: "Bob"
-   }
-  }
-  render() {
-    return (
-      <div>
-        <nav className="navbar">
-          <a href="/" className="navbar-brand">Chatty McChatterton</a>
-        </nav>
-      <Message />
-      <ChatBar currentUser={this.state.currentUser} />
-      </div> 
-    );
-  }
-}
-export default App;
