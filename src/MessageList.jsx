@@ -1,4 +1,6 @@
-[
+import React, {Component} from 'react';
+
+const data = [
   {
     type: 'incomingMessage',
     content: 'I wont be impressed with technology until I can download food.',
@@ -33,3 +35,19 @@
     content: 'Anonymous2 changed their name to NotFunny',
   },
 ]
+
+
+class MessageList extends Component {
+  render() {
+    const messageItem =
+      data.map((message, i) =>
+      <div key={i} className="message">
+        <span className="message-username">{message.username}</span>
+        <span className="message-content">{message.content}</span>
+      </div>
+      )
+    return (<ul>{messageItem}</ul>)
+  }
+}
+
+export default MessageList;
