@@ -7,7 +7,7 @@ class App extends Component {
     super(props),
     this.state = {
       currentUser: {name: 'Say My Name'}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: []
+      messages: [],
     }
    this.handleKeyPress = this.handleKeyPress.bind(this)
 
@@ -19,14 +19,25 @@ class App extends Component {
       this.chatSocket.send(JSON.stringify("Things are looking up!"));
     };
     this.chatSocket.onmessage = (event) => {
-      let goodData = JSON.parse(event.data);
-      this.setState({messages: [...this.state.messages, goodData]})
+      let parsedData = JSON.parse(event.data);
+      switch(parsedData.type) {
+        case "incomingMessage":
+          this.setState({messages: [...this.state.messages, parsedData]})
+          break;
+        case "incomingNotification":
+          let newName = {...this.state.currentUser};
+          newName.name = parsedData.content;
+          this.setState({
+            messages: [...this.state.messages, parsedData],
+            currentUser: newName});
+        break;
+      }
     }
   }
 
-  addMessage(messageName, userName) {
+  addMessage(messageName, userName, type) {
     const newMessage = {
-      type: 'incomingMessage',
+      type: type,
       content: messageName,
       username: userName,
     }
@@ -34,14 +45,12 @@ class App extends Component {
   }
 
   handleKeyPress = (event) => {
-    if (event.key === 'Enter' && event.target.name === "messageInput") {
-     this.addMessage(event.target.value, this.state.currentUser.name);
+    if (event.key === 'Enter' && event.target.name === "incomingMessage") {
+     this.addMessage(event.target.value, this.state.currentUser.name, event.target.name);
      event.target.value = null;
     }
-    if (event.key === 'Enter' && event.target.name === "userNameInput") {
-      let newName = {...this.state.currentUser};
-      newName.name = event.target.value;
-      this.setState({currentUser: newName});
+    if (event.key === 'Enter' && event.target.name === "incomingNotification") {
+      this.addMessage(event.target.value, this.state.currentUser.name, event.target.name)
     }
   }
 
@@ -51,7 +60,7 @@ class App extends Component {
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty McChatterton</a>
         </nav>
-        <Message data={this.state.messages}/>
+        <Message data={this.state.messages} notifications={this.state.nofifications}/>
         <ChatBar currentUser={this.state.currentUser.name} handleKeyPress={this.handleKeyPress} />
       </div>
     );
