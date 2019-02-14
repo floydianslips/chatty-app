@@ -8,8 +8,8 @@ class ChatBar extends Component {
   render() {
     return (
       <footer className="chatbar">
-        <input className="chatbar-username" defaultValue={this.props.currentUser} />
-        <input className="chatbar-message" type="text" onKeyPress={this.props.handleKeyPress} placeholder="Type a message and hit ENTER" />
+        <input className="chatbar-username" name="userNameInput" onKeyPress={this.props.handleKeyPress} defaultValue={this.props.currentUser} />
+        <input className="chatbar-message" name="messageInput" onKeyPress={this.props.handleKeyPress} placeholder="Type a message and hit ENTER" />
       </footer>
     )
   }
