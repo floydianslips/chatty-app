@@ -12,13 +12,20 @@ class App extends Component {
       messages: []
     }
    this.handleKeyPress = this.handleKeyPress.bind(this)
+
   }
 
   componentDidMount() {
     this.chatSocket = new WebSocket("ws://localhost:3001");
     this.chatSocket.onopen = (event) => {
       this.chatSocket.send(JSON.stringify("Things are looking up!"));
+
     };
+    this.chatSocket.onmessage = (event) => {
+      let goodData = JSON.parse(event.data);
+      this.setState({messages: [...this.state.messages, goodData]})
+      this.render()
+    }
   }
 
   addMessage(messageName, userName) {
@@ -27,13 +34,11 @@ class App extends Component {
       content: messageName,
       username: userName,
     }
-    // return newMessage;
-    const messages = this.state.messages.concat(newMessage);
     this.chatSocket.send(JSON.stringify(newMessage));
-    this.setState({messages: messages});
   }
 
   handleKeyPress(event) {
+    // this.getMessage();
     if (event.key === 'Enter') {
      this.addMessage(event.target.value, this.state.currentUser.name);
      event.target.value = null;
