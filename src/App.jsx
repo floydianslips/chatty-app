@@ -8,6 +8,7 @@ class App extends Component {
     this.state = {
       currentUser: {name: 'Say My Name'}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [],
+      numberUsers: 0,
     }
    this.handleKeyPress = this.handleKeyPress.bind(this)
 
@@ -16,10 +17,15 @@ class App extends Component {
   componentDidMount() {
     this.chatSocket = new WebSocket("ws://localhost:3001");
     this.chatSocket.onopen = (event) => {
-      this.chatSocket.send(JSON.stringify("Things are looking up!"));
-    };
+      this.chatSocket.send(JSON.stringify("Opened"));
+    }
     this.chatSocket.onmessage = (event) => {
       let parsedData = JSON.parse(event.data);
+      if (Number.isInteger(parsedData)) {
+        this.setState({numberUsers: parsedData})
+        console.log(this.state.numberUsers)
+      }
+      
       switch(parsedData.type) {
         case "incomingMessage":
           this.setState({messages: [...this.state.messages, parsedData]})
@@ -59,6 +65,7 @@ class App extends Component {
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty McChatterton</a>
+          <p className="counter">Users: {this.state.numberUsers}</p>
         </nav>
         <Message data={this.state.messages} notifications={this.state.nofifications}/>
         <ChatBar currentUser={this.state.currentUser.name} handleKeyPress={this.handleKeyPress} />

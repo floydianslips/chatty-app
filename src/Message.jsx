@@ -8,7 +8,7 @@ class Message extends Component {
       <div>
           <main className="messages">
           <MessageList data={this.props.data}/>
-          </main> 
+          </main>
       </div>
     )
   }

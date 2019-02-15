@@ -17,15 +17,34 @@ const wss = new WS.Server({ server });
 const uuidv4 = require('uuid/v4');
 
 wss.on('connection', function connection (ws) {
+  console.log("Client Connected");
+  
+  // })
   ws.on('message', function incoming(data) {
     let msg = JSON.parse(data);
+
+    // console.log(msg)
+    if (msg === "Opened") {
+      let clientNumber = JSON.stringify(wss.clients.size);
+      wss.clients.forEach(function each(client) {
+        client.send(clientNumber);
+    })
+  } else {
     msg.id = uuidv4();
     let sendData = JSON.stringify(msg);
     wss.clients.forEach(function each(client) {
       client.send(sendData)
+      // client.send(clientNumber);
     })
+  }
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected!!'));
+  ws.on('close', () => {
+    let clientNumber = JSON.stringify(wss.clients.size);
+    wss.clients.forEach(function each(client) {
+      client.send(clientNumber);
+  })
+  console.log('Client disconnected!!');
+  })
 });
