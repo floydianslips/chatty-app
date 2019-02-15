@@ -6,9 +6,9 @@ class Message extends Component {
   render() {
     return (
       <div>
-          <main className="messages">
-          <MessageList data={this.props.data}/>
-          </main>
+        <main className="messages">
+        <MessageList data={this.props.data}/>
+        </main>
       </div>
     )
   }

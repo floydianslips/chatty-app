@@ -14,37 +14,38 @@ const server = express()
 
 // Create the WebSockets server
 const wss = new WS.Server({ server });
+// Use to create UUID for messages
 const uuidv4 = require('uuid/v4');
 
+// Send number of connected clients to App
+let getClientNumber = () => {
+  wss.clients.forEach(function each(client) {
+    let clientNumber = JSON.stringify(wss.clients.size);
+    client.send(clientNumber);
+  })
+}
+
 wss.on('connection', function connection (ws) {
-  console.log("Client Connected");
-  
-  // })
+  console.log('Client Connected');
+
   ws.on('message', function incoming(data) {
     let msg = JSON.parse(data);
 
-    // console.log(msg)
+    // When a client connects send back the number of clients connected else send message to all clients
     if (msg === "Opened") {
-      let clientNumber = JSON.stringify(wss.clients.size);
+      getClientNumber();
+    } else {
+      msg.id = uuidv4();
+      let sendData = JSON.stringify(msg);
       wss.clients.forEach(function each(client) {
-        client.send(clientNumber);
-    })
-  } else {
-    msg.id = uuidv4();
-    let sendData = JSON.stringify(msg);
-    wss.clients.forEach(function each(client) {
-      client.send(sendData)
-      // client.send(clientNumber);
-    })
-  }
+        client.send(sendData);
+      })
+    }
   });
 
-  // Set up a callback for when a client closes the socket. This usually means they closed their browser.
+  // When a client closes WS connection send the new number of clients to all clients
   ws.on('close', () => {
-    let clientNumber = JSON.stringify(wss.clients.size);
-    wss.clients.forEach(function each(client) {
-      client.send(clientNumber);
-  })
-  console.log('Client disconnected!!');
+    getClientNumber();
+    console.log('Client disconnected!!');
   })
 });

@@ -6,12 +6,11 @@ class App extends Component {
   constructor(props) {
     super(props),
     this.state = {
-      currentUser: {name: 'Say My Name'}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {name: 'Chatty'}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [],
       numberUsers: 0,
     }
    this.handleKeyPress = this.handleKeyPress.bind(this)
-
   }
 
   componentDidMount() {
@@ -23,9 +22,8 @@ class App extends Component {
       let parsedData = JSON.parse(event.data);
       if (Number.isInteger(parsedData)) {
         this.setState({numberUsers: parsedData})
-        console.log(this.state.numberUsers)
       }
-      
+
       switch(parsedData.type) {
         case "incomingMessage":
           this.setState({messages: [...this.state.messages, parsedData]})
@@ -64,7 +62,7 @@ class App extends Component {
     return (
       <div>
         <nav className="navbar">
-          <a href="/" className="navbar-brand">Chatty McChatterton</a>
+          <a href="/" className="navbar-brand">Chatwick McChatterton</a>
           <p className="counter">Users: {this.state.numberUsers}</p>
         </nav>
         <Message data={this.state.messages} notifications={this.state.nofifications}/>
@@ -73,4 +71,5 @@ class App extends Component {
     );
   }
 }
+
 export default App;
