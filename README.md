@@ -12,3 +12,8 @@ Self hosted instant chat app which can handle multiple users simultaneously.
 * React
 * Webpack
 * Babel
+
+### Images
+
+!["Single user screen"](https://github.com/floydianslips/chatty-app/blob/master/docs/chatty_1.png?raw=true)
+!["Double user screen"](https://github.com/floydianslips/chatty-app/blob/master/docs/chatty_2.png?raw=true)   
