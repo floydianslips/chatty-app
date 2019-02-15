@@ -18,30 +18,27 @@ const wss = new WS.Server({ server });
 const uuidv4 = require('uuid/v4');
 
 // Send number of connected clients to App
-let getClientNumber = () => {
+const getClientNumber = () => {
   wss.clients.forEach(function each(client) {
     let clientNumber = JSON.stringify(wss.clients.size);
     client.send(clientNumber);
   })
 }
 
-wss.on('connection', function connection (ws) {
+wss.on('connection', function connection(ws) {
   console.log('Client Connected');
+
+  getClientNumber();
 
   ws.on('message', function incoming(data) {
     let msg = JSON.parse(data);
-
-    // When a client connects send back the number of clients connected else send message to all clients
-    if (msg === "Opened") {
-      getClientNumber();
-    } else {
-      msg.id = uuidv4();
-      let sendData = JSON.stringify(msg);
-      wss.clients.forEach(function each(client) {
-        client.send(sendData);
-      })
-    }
-  });
+  
+    msg.id = uuidv4();
+    let sendData = JSON.stringify(msg);
+    wss.clients.forEach(function each(client) {
+      client.send(sendData);
+    })
+  })
 
   // When a client closes WS connection send the new number of clients to all clients
   ws.on('close', () => {

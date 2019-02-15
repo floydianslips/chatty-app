@@ -17,9 +17,6 @@ class App extends Component {
 
   componentDidMount() {
     this.chatSocket = new WebSocket("ws://localhost:3001");
-    this.chatSocket.onopen = (event) => {
-      this.chatSocket.send(JSON.stringify("Opened"));
-    }
     this.chatSocket.onmessage = (event) => {
       let parsedData = JSON.parse(event.data);
       if (Number.isInteger(parsedData)) {
@@ -56,7 +53,7 @@ class App extends Component {
     return (
       <div>
         <NavBar numberUsers={this.state.numberUsers} />
-        <Message data={this.state.messages} notifications={this.state.nofifications}/>
+        <Message data={this.state.messages} />
         <ChatBar currentUser={this.state.currentUser.name} handleKeyPress={this.handleKeyPress} />
       </div>
     );
